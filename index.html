@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Earn Money Page</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(45deg, #00bcd4, #4caf50);
+            margin: 0;
+            padding: 0;
+            color: #fff;
+        }
+        .container {
+            width: 80%;
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 40px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            text-align: center;
+        }
+        h1 {
+            font-size: 32px;
+            color: #333;
+            margin-bottom: 30px;
+        }
+        .balance {
+            background-color: #ff5722;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            font-size: 24px;
+            color: #fff;
+        }
+        .earn-btn {
+            padding: 15px 30px;
+            background-color: #4CAF50;
+            color: white;
+            font-size: 18px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .earn-btn:hover {
+            background-color: #45a049;
+        }
+        .footer {
+            font-size: 14px;
+            color: #888;
+            margin-top: 30px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Earn 50 Taka</h1>
+
+    <div class="balance">
+        <strong>Balance: </strong><span id="balance">0</span> Taka
+    </div>
+
+    <button class="earn-btn" id="earnBtn">Earn 50 Taka</button>
+    <p id="message" style="font-size: 16px; color: #ffeb3b;"></p>
+
+    <p class="footer">You can click the Earn button once every 24 hours to add 50 Taka to your balance.</p>
+</div>
+
+<script>
+    let balance = 0;
+    let lastClicked = localStorage.getItem('lastClicked') || 0; // Store the last time button was clicked
+
+    const earnButton = document.getElementById('earnBtn');
+    const balanceElement = document.getElementById('balance');
+    const messageElement = document.getElementById('message');
+
+    // Update the balance in the UI
+    function updateBalance() {
+        balanceElement.textContent = balance;
+    }
+
+    // Check if 24 hours have passed since last click
+    function checkEarnButton() {
+        const currentTime = new Date().getTime();
+        const timeDifference = currentTime - lastClicked;
+
+        // If 24 hours have passed or if it's the first time clicking
+        if (timeDifference >= 24 * 60 * 60 * 1000 || lastClicked == 0) {
+            earnButton.disabled = false;
+            messageElement.textContent = ''; // Clear any previous message
+        } else {
+            const remainingTime = 24 * 60 * 60 * 1000 - timeDifference;
+            const remainingHours = Math.ceil(remainingTime / (1000 * 60 * 60));
+            earnButton.disabled = true;
+            messageElement.textContent = `You can earn again in ${remainingHours} hours.`;
+        }
+    }
+
+    // Earn 50 Taka and update balance
+    earnButton.addEventListener('click', function() {
+        balance += 50;
+        updateBalance();
+
+        // Store the current time in localStorage when button is clicked
+        lastClicked = new Date().getTime();
+        localStorage.setItem('lastClicked', lastClicked);
+
+        // Re-check the button status
+        checkEarnButton();
+    });
+
+    // Initial check for the button status
+    checkEarnButton();
+</script>
+
+</body>
+</html>
